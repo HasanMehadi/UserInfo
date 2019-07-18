@@ -1,0 +1,136 @@
+<div class="row">
+  <div class="col-md-12">
+    <nav class="navbar navbar-expand-md navbar-dark bg-info">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+          </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0 -align-right">
+          <div class="dropdown">
+            <button class="dropbtn">{{username}}</button>
+            <div class="dropdown-content">
+              <a (click)="changePassword()">Change Password</a>
+              <a (click)="logOut()">Logout</a>
+
+            </div>
+          </div>
+        </form>
+      </div>
+    </nav>
+  </div>
+  <div class="col-md-2">
+    <div class="sidenav" style="margin-top: 71px">
+      <a (click)="checkProfile()">Profile</a>
+      <a (click)="getUserPage(0)" *ngIf="role =='ADMIN'">User List</a>
+    </div>
+  </div>
+</div>
+
+<div class="container" *ngIf="role== 'ADMIN'">
+  <div class="row" >
+    <div class="col-md-10">
+      <div class="col-md-12 text-center" style="margin-right: 100px">
+        <p style="font-size: 30px">ADMIN PROFILE</p>
+      </div>
+      <div class="container-fluid" *ngIf="profile==true">
+        <div class="table-responsive-lg">
+          <div class="table-head table-bordered">
+            <div class="row">
+              <div class="col">Name</div>
+              <div class="col">Age</div>
+              <div class="col">Email</div>
+              <div class="col">Phone</div>
+            </div>
+          </div>
+          <div class="table-body table-bordered">
+            <div *ngFor="let user of users|paginate:{itemsPerPage: size,currentPage: page,totalItems: totalElements}"
+                 class="row">
+
+              <div class="col">{{user.username}}</div>
+              <div class="col">{{user.age}}</div>
+              <div class="col">{{user.email}}</div>
+              <div class="col">{{user.phone}}</div>
+            </div>
+          </div>
+          <pagination-controls
+            (pageChange)="page = $event; pageChangeFire(page)"
+            nextLabel="Next"
+            previousLabel="Previous"
+            responsive="true"
+            screenReaderCurrentLabel="You're on page">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="profile==false">
+    <div class="col-md-10">
+      <div class="col md 12 text-center" style="margin-right: 100px">
+        <div class="container fluid">
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <tbody>
+              <tr>
+                <th>First Name</th>
+                <td>{{this.loginUser.firstName}}</td>
+              </tr><tr>
+                <th>Last Name</th>
+                <td>{{this.loginUser.lastName}}</td>
+              </tr><tr>
+                <th>Address</th>
+                <td>{{this.loginUser.address}}</td>
+              </tr><tr>
+                <th>Phone</th>
+                <td>{{this.loginUser.phone}}</td>
+              </tr><tr>
+                <th>Email</th>
+                <td>{{this.loginUser.email}}</td>
+              </tr><tr>
+                <th>Birth Day</th>
+                <td>{{this.loginUser.dob}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container" *ngIf="role== 'USER'">
+  <div class="row" *ngIf="profile==false">
+    <div class="col-md-10">
+      <div class="col md 12 text-center" style="margin-right: 100px">
+        <div class="container fluid">
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <tbody>
+              <tr>
+                <th>First Name</th>
+                <td>{{this.loginUser.firstName}}</td>
+              </tr><tr>
+                <th>Last Name</th>
+                <td>{{this.loginUser.lastName}}</td>
+              </tr><tr>
+                <th>Address</th>
+                <td>{{this.loginUser.address}}</td>
+              </tr><tr>
+                <th>Phone</th>
+                <td>{{this.loginUser.phone}}</td>
+              </tr><tr>
+                <th>Email</th>
+                <td>{{this.loginUser.email}}</td>
+              </tr><tr>
+                <th>Birth Day</th>
+                <td>{{this.loginUser.dob}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

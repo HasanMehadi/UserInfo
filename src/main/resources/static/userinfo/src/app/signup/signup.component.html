@@ -1,0 +1,90 @@
+
+<div class="card bg-light">
+  <div class="card-body mx-auto">
+    <h4 class="card-title mt-3 text-center">Create Account</h4>
+    <form #signupForm="ngForm" (ngSubmit)="createAccount(signupForm)">
+      <div class="form-group input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+        </div>
+        <input [(ngModel)]="user.firstName" name="firstName" class="form-control" placeholder="First Name" type="text" required>
+      </div> <!-- form-group// -->
+      <div class="form-group input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text"> <i class="fa fa-users"></i> </span>
+        </div>
+        <input [(ngModel)]="user.lastName" name="lastName" class="form-control" placeholder="Last Name" type="text" required>
+      </div> <!-- form-group// -->
+      <div class="form-group input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text"> <i class="fa fa-calendar"></i> </span>
+        </div>
+        <input [(ngModel)]="user.dob" name="dob" class="form-control" placeholder="Birth Date" type="date" required>
+      </div> <!-- form-group// -->
+      <div class="form-group input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text"> <i class="fa fa-address-book"></i> </span>
+        </div>
+        <input [(ngModel)]="user.address" name="address" class="form-control" placeholder="Address" type="text" required>
+      </div>
+      <div class="form-group input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+        </div>
+        <input [(ngModel)]="user.username" (blur)="checkUserName()" name="email" class="form-control"  placeholder="User Name" type="text" required>
+      </div>
+      <div class="alert alert-danger" role="alert" *ngIf='userNamesuccess=="true"'>
+        {{userNameMessage}}
+      </div><!-- form-group// -->
+      <div class="form-group input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+        </div>
+        <input [(ngModel)]="user.email" (blur)="checkEmail()" name="email" class="form-control"  placeholder="Email" type="email" required>
+      </div> <!-- form-group// -->
+      <div class="alert alert-danger" role="alert" *ngIf='success=="false"'>
+        {{emailMessage}}
+      </div>
+      <div class="form-group input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text"> <i class="fa fa-phone"></i> </span>
+        </div>
+        <input [(ngModel)]="user.phone" name="phone" class="form-control" placeholder="Phone" type="text" required>
+      </div>
+      <div class="form-group input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text"> <i class="fa fa-building"></i> </span>
+        </div>
+        <select [(ngModel)]="user.role" name="role" class="form-control" required>
+          <option value="ADMIN">ADMIN</option>
+          <option value="USER">USER</option>
+        </select>
+      </div>
+      <div class="form-group input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+        </div>
+        <input [(ngModel)]="user.password" name="password" class="form-control" placeholder="Create password" type="password" required>
+      </div>
+      <div class="form-group input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+        </div>
+        <input [(ngModel)]="rematch" name="rematch" class="form-control" placeholder="Repeat password" type="password" (input)="matchPass(rematch)" required>
+      </div> <!-- form-group// -->
+      <div class="alert alert-danger" role="alert" *ngIf="message">
+        {{message}}
+      </div>
+      <div class="alert alert-danger" role="alert" *ngIf="!notMatched">
+        Password not Matched
+      </div>
+      <div class="alert alert-success" role="alert" *ngIf="matched">
+        Password Matched
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-block"> Create Account  </button>
+      </div> <!-- form-group// -->
+      <p class="text-center">Have an account? <a href="">Log In</a> </p>
+    </form>
+  </div>
+</div>
