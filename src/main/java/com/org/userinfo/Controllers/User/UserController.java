@@ -1,6 +1,7 @@
 package com.org.userinfo.Controllers.User;
 
 
+import com.org.userinfo.Configurations.*;
 import com.org.userinfo.DTO.ForgetPasswordDTO;
 import com.org.userinfo.DTO.UserDTO;
 import com.org.userinfo.Models.User;
@@ -12,12 +13,9 @@ import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import com.org.userinfo.Configurations.ModelEntityConversionUtil;
-import com.org.userinfo.Configurations.Response;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
 
 import java.security.Principal;
@@ -30,6 +28,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private JwtUserDetailsServiceImpl jwtUserDetailsService;
 
     @GetMapping("getUser")
     @PreAuthorize("hasAnyRole('ADMIN') or hasAnyRole('USER')")
@@ -43,21 +43,31 @@ public class UserController {
 
 
     @PostMapping("updatePassword")
-    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
-    public ResponseEntity<Response> updatePassword(Long id , ForgetPasswordDTO forgetPasswordDTO) {
+    @PreAuthorize("hasAnyAuthority('USER') or hasAnyAuthority('ADMIN')")
+    public ResponseEntity<Response> updatePassword(@RequestBody ForgetPasswordDTO forgetPasswordDTO) {
 
         try{
-            if(userService.changePassword(id,forgetPasswordDTO) != null){
-                return new ResponseEntity<>(new Response("true"),HttpStatus.OK);
+            if(forgetPasswordDTO.getUsername()!= null){
+                UserDetails userDetails =jwtUserDetailsService.loadUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+
+                if(userDetails.getPassword().equals(forgetPasswordDTO.getOldPassword())){
+                    /*userDetails.setPassword(PasswordUtil.passwordHash(forgetPasswordDTO.getNewPassword()));
+                    User updatedUser = userService.save(user);
+                    if(updatedUser != null){
+                        return new ResponseEntity<>(new Response("true"),HttpStatus.OK);
+                    }*/
+                }else {
+                    return new ResponseEntity<>(new Response("false"),HttpStatus.OK);
+                }
             }
         }catch (Exception ex){
             System.out.println(ex.getCause().getMessage());
         }
-        return new ResponseEntity<>(new Response("Forbid to Change Password, Contract with Provider "),HttpStatus.OK);
+        return new ResponseEntity<>(new Response("Forbid to Change Password, Contract with Provider "),HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @GetMapping("users")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN') or hasAnyAuthority('USER')")
     public ResponseEntity<Page<UserDTO>> getUserByPage(Pageable pageable) {
 
         try{

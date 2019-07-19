@@ -4,6 +4,7 @@ import com.org.userinfo.Models.User;
 import com.org.userinfo.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.org.userinfo.Configurations.Response;
@@ -21,15 +22,20 @@ public class RegistrationController {
     @PostMapping(value = "registration")
     public ResponseEntity<Response> registration(@RequestBody User user){
 
-        User dbUser = userService.save(user);
+       try{
+           User dbUser = userService.save(user);
 
-        if(dbUser != null){
-            return new ResponseEntity<>(new Response("true"), HttpStatus.OK);
-        }
+           if(dbUser != null){
+               return new ResponseEntity<>(new Response("true"), HttpStatus.OK);
+           }
+       }catch (Exception ex){
+           return new ResponseEntity<>(new Response(ex.getCause().getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+       }
 
         System.out.println("User Saved Failed");
 
-        return new ResponseEntity<>(new Response("false"), HttpStatus.OK);
+       return null;
+
     }
 
     @GetMapping(value = "checkEmail")
@@ -60,15 +66,15 @@ public class RegistrationController {
             if(username != null){
                 user = userService.getUserByUserName(username);
                 if(user == null){
-                    return new ResponseEntity<>(new Response("false"), HttpStatus.OK);
+                    return new ResponseEntity<>(new Response("true"), HttpStatus.OK);
                 }
             }
 
         }catch (Exception ex){
             System.out.println(ex.getCause().getMessage());
-            return new ResponseEntity<>(new Response("false"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new Response("Internal Server Error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return new ResponseEntity<>(new Response("true"), HttpStatus.OK);
+        return new ResponseEntity<>(new Response("false"), HttpStatus.OK);
     }
 }

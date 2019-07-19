@@ -30,24 +30,6 @@ public class ModelEntityConversionUtil {
         return result;
     }
 
-//    public static <S, T> Page<T> convertPage(Page<S> objects, Class<T> type) {
-//        if(null == objects) {
-//            return null;
-//        }
-//
-//        ModelMapper modelMapper = new ModelMapper();
-//        Page<T> result = objects.map(new Converter<S, T>() {
-//            @Override
-//            public T convert(S obj) {
-//                if(null != obj) {
-//                    return modelMapper.map(obj, type);
-//                }
-//                return null;
-//            }
-//        });
-//        return result;
-//    }
-
 
     public static <S, T> Page<T> convertPage(Page<S> objects, Class<T> type) {
         if(null == objects) {

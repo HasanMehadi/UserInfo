@@ -22,6 +22,9 @@ export class DashBoardService {
   getUserPage(token:any,page:any,size:any):Observable<any>{
 
     const headers = new HttpHeaders({'Authorization': 'Bearer '+token});
+
+    console.log(headers);
+
     return this.http.get(this.constantService.mainUrl+'user/users',{headers: headers, params: {page: page.toString(),size:size.toString()}});
 
   }

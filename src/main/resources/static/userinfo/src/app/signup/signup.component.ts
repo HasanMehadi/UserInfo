@@ -2,6 +2,7 @@ import {Component, ElementRef, HostListener, OnInit} from '@angular/core';
 import {SignupService} from "./signup.service";
 import {Router, RouterModule} from '@angular/router';
 import { LoginAuthService } from "../login/login-auth.service";
+import {User} from "../user";
 
 declare var $: any;
 
@@ -20,11 +21,11 @@ export class SignupComponent implements OnInit {
   notMatched:boolean;
   pass:any;
   conPass:any;
-  matched:any;
-  success:any;
+  matched:boolean;
+  success:boolean;
   emailMessage:any;
   userNameMessage:any;
-  userNamesuccess:any;
+  userNamesuccess:boolean;
   loginUser :any={};
   constructor( private signupService:SignupService,
                private router: Router,
@@ -35,6 +36,8 @@ export class SignupComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this.user =new User();
 
     this.loginUser = JSON.parse(localStorage.getItem('currentUser'));
     if(this.loginUser.token != null){
@@ -65,15 +68,17 @@ export class SignupComponent implements OnInit {
   matchPass(confirmPassword) {
     this.pass = this.user.password;
     this.conPass = this.rematch;
-    if (!confirmPassword) {
-      this.notMatched = true;
-    } else {
-      if (this.pass != this.conPass) {
-        this.notMatched = false;
-        this.matched= false;
-      } else {
+    if(this.user.password != null && confirmPassword != null){
+      if (!confirmPassword) {
         this.notMatched = true;
-        this.matched=true;
+      } else {
+        if (this.pass != this.conPass) {
+          this.notMatched = false;
+          this.matched= false;
+        } else {
+          this.notMatched = true;
+          this.matched=true;
+        }
       }
     }
   };
@@ -81,7 +86,19 @@ export class SignupComponent implements OnInit {
 
   createAccount( signupForm: any){
 
-    if(this.matched && this.notMatched && this.success=='true'){
+    console.log('create accout called');
+
+    console.log('matched' + this.matched);
+    console.log('notMatched' + this.notMatched);
+    console.log('success' + this.success);
+    console.log('userNamesuccess' + this.userNamesuccess);
+
+    console.log(this.user);
+
+    if(this.matched && this.notMatched && this.success && this.userNamesuccess == true){
+
+      console.log(this.user);
+
       this.signupService.saveUser(this.user).subscribe((response)=>{
         if(response){
 
@@ -101,11 +118,11 @@ export class SignupComponent implements OnInit {
     let pattern = new RegExp("[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}");
 
     if(this.user.email == null){
-      this.success = 'true'
+      this.success = true;
     }else{
       if (("" + pattern.test(this.user.email)) == 'false'){
 
-        this.success = "false";
+        this.success = false;
         this.emailMessage = "Invalid Email Address";
       }
       else{
@@ -125,12 +142,12 @@ export class SignupComponent implements OnInit {
     this.success = null;
     this.signupService.checkUserName(this.user.username).subscribe((response) => {
       console.log(response);
-      if (response.message==='true') {
-       this.userNamesuccess = response.message;
+      if (response.message==='false') {
+        this.userNamesuccess = false;
         console.log(this.userNamesuccess);
         this.userNameMessage = "Username Already Used";
       }else {
-        this.userNamesuccess=null;
+        this.userNamesuccess=true;
       }
     })
 

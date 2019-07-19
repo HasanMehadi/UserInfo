@@ -13,8 +13,7 @@ import {ConstantService} from "../constant.service";
 export class LoginComponent implements OnInit {
 
   user: any;
-
-  anyUser: any;
+  logedUser: any;
 
   constructor(private loginService: LoginService ,
               private router: Router,
@@ -27,13 +26,13 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
 
-    this.anyUser = JSON.parse(localStorage.getItem('currentUser'));
-    if(this.anyUser.token != null){
+    this.logedUser = JSON.parse(localStorage.getItem('currentUser'));
+    if(this.logedUser.token != null){
       this.router.navigate(['dashBoard']);
     }
   }
 
-  public loginUser() {
+  public loginUser(loginForm: any) {
 
     this.loginService.loginUser(this.user).subscribe((response)=>{
 

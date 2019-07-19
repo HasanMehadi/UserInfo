@@ -2,6 +2,7 @@ import {Component, NgModule, OnInit} from '@angular/core';
 import {DashBoardService} from "./dash-board.service";
 import {LoginAuthService} from "../login/login-auth.service";
 import {Router} from "@angular/router";
+import {LocationStrategy} from "@angular/common";
 
 
 
@@ -13,7 +14,6 @@ import {Router} from "@angular/router";
 export class DashBoardComponent implements OnInit {
 
   loginUser: any = {};
-
   users=[];
   profile: boolean;
   username: string;
@@ -22,30 +22,34 @@ export class DashBoardComponent implements OnInit {
   totalElements: number = 0;
   currentStatus: any;
   role: any;
+  pass: boolean;
 
   constructor(private dashBoardService: DashBoardService,
               private loginAuthService: LoginAuthService,
               private router: Router,
+              location: LocationStrategy
   ) {
 
     this.loginAuthService.isLoggedIn();
     this.loginUser = JSON.parse(localStorage.getItem('currentUser'));
-
     this.currentStatus = this.loginAuthService.getStatus().subscribe((currentStatus) => {
       this.currentStatus = currentStatus;
-    })
+    });
 
+    location.onPopState(() => {
+      this.pass = false;
+      console.log(this.pass);
+    });
     this.profile=null;
   }
 
   ngOnInit() {
-
+    this.pass = false;
     this.username = this.loginUser.username;
     this.role = this.loginUser.role;
   }
 
   logOut() {
-
     localStorage.removeItem('currentUser');
     this.router.navigate(['']);
   }
@@ -61,14 +65,20 @@ export class DashBoardComponent implements OnInit {
 
   pageChangeFire(page: number) {
     this.getUserPage(page - 1);
-
   }
 
   checkProfile(){
+
+    if(this.router.url !== '/dashBoard'){
+      this.router.navigate(['dashBoard']);
+      this.pass=false;
+    }
     this.profile=false
   }
 
   changePassword(){
+    this.pass = true;
+    this.router.navigate(['dashBoard/changePassword'])
 
   }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 import {Router} from "@angular/router";
 import {ConstantService} from "./constant.service";
 import {LoginAuthService} from "./login/login-auth.service";

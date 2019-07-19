@@ -9,7 +9,11 @@ export class ConstantService {
   response:any;
   currentStatus: any;
 
-  constructor() { }
+  passTrigger:any;
+  constructor() {
+
+    this.passTrigger = false;
+  }
 
 
 }

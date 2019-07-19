@@ -2,6 +2,7 @@ package  com.org.userinfo.Models;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -13,25 +14,36 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotNull
     private String firstName;
 
+    @NotNull
     private String lastName;
 
+    @NotNull
+    @Column(unique = true)
     private String username;
 
+    @NotNull
     private String address;
 
+    @NotNull
     private String phone;
 
+    @NotNull
+    @Column(unique = true)
     private String email;
 
+    @NotNull
     private String password;
 
+    @NotNull
     private LocalDate dob;
 
+    @NotNull
     private String role;
 
-
+    @NotNull
     private boolean enable;
 
     public Long getId() {
