@@ -5,6 +5,7 @@ import com.org.userinfo.Configurations.*;
 import com.org.userinfo.DTO.ForgetPasswordDTO;
 import com.org.userinfo.DTO.UserDTO;
 import com.org.userinfo.Models.User;
+import com.org.userinfo.Repositories.UserRepository;
 import com.org.userinfo.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,7 +30,7 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private JwtUserDetailsServiceImpl jwtUserDetailsService;
+    private UserRepository userRepository;
 
     @GetMapping("getUser")
     @PreAuthorize("hasAnyRole('ADMIN') or hasAnyRole('USER')")
@@ -47,18 +48,9 @@ public class UserController {
     public ResponseEntity<Response> updatePassword(@RequestBody ForgetPasswordDTO forgetPasswordDTO) {
 
         try{
-            if(forgetPasswordDTO.getUsername()!= null){
-                UserDetails userDetails =jwtUserDetailsService.loadUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+            if(userService.changePassword(forgetPasswordDTO)) {
 
-                if(userDetails.getPassword().equals(forgetPasswordDTO.getOldPassword())){
-                    /*userDetails.setPassword(PasswordUtil.passwordHash(forgetPasswordDTO.getNewPassword()));
-                    User updatedUser = userService.save(user);
-                    if(updatedUser != null){
-                        return new ResponseEntity<>(new Response("true"),HttpStatus.OK);
-                    }*/
-                }else {
-                    return new ResponseEntity<>(new Response("false"),HttpStatus.OK);
-                }
+                return new ResponseEntity<>(new Response("true"),HttpStatus.OK);
             }
         }catch (Exception ex){
             System.out.println(ex.getCause().getMessage());

@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
 
     this.logedUser = JSON.parse(localStorage.getItem('currentUser'));
-    if(this.logedUser.token != null){
+    if(this.logedUser != null){
       this.router.navigate(['dashBoard']);
     }
   }
@@ -37,6 +37,7 @@ export class LoginComponent implements OnInit {
     this.loginService.loginUser(this.user).subscribe((response)=>{
 
       this.constant.response= response;
+      console.log(this.constant.response);
 
       if(this.constant.response !=null){
         if(this.constant.response.token){
@@ -45,7 +46,7 @@ export class LoginComponent implements OnInit {
         }
       }
     }, error=>{
-
+      alert("User Name and Password Mismatch");
     });
   }
 }

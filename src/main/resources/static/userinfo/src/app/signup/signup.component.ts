@@ -36,11 +36,14 @@ export class SignupComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    this.phone=null;
+    this.notMatched = true;
+    this.matched = false;
+    this.success = true;
     this.user =new User();
 
     this.loginUser = JSON.parse(localStorage.getItem('currentUser'));
-    if(this.loginUser.token != null){
+    if(this.loginUser != null){
       this.router.navigate(['dashBoard']);
     }
 
@@ -49,10 +52,7 @@ export class SignupComponent implements OnInit {
     });
 
     this.user= {};
-    this.phone=null;
-    this.notMatched = true;
-    this.matched = false;
-    this.success = false;
+
   }
 
   @HostListener('submit', ['$event'])
@@ -86,15 +86,6 @@ export class SignupComponent implements OnInit {
 
   createAccount( signupForm: any){
 
-    console.log('create accout called');
-
-    console.log('matched' + this.matched);
-    console.log('notMatched' + this.notMatched);
-    console.log('success' + this.success);
-    console.log('userNamesuccess' + this.userNamesuccess);
-
-    console.log(this.user);
-
     if(this.matched && this.notMatched && this.success && this.userNamesuccess == true){
 
       console.log(this.user);
@@ -113,7 +104,7 @@ export class SignupComponent implements OnInit {
   }
 
   checkEmail(){
-    this.success=null;
+    this.success=true;
 
     let pattern = new RegExp("[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}");
 
@@ -141,10 +132,8 @@ export class SignupComponent implements OnInit {
   checkUserName() {
     this.success = null;
     this.signupService.checkUserName(this.user.username).subscribe((response) => {
-      console.log(response);
       if (response.message==='false') {
         this.userNamesuccess = false;
-        console.log(this.userNamesuccess);
         this.userNameMessage = "Username Already Used";
       }else {
         this.userNamesuccess=true;

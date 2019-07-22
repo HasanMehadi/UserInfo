@@ -15,8 +15,6 @@ public class JwtUserFactory {
 
     public static JwtUser createUser(User user){
 
-        System.out.println("Jwt user Create called");
-
         return new JwtUser(user.getId() ,user.getUsername(), user.getPassword(),user,maptoGrantedAuthorities(new ArrayList<>(Arrays.asList(user.getRole()))));
     }
 

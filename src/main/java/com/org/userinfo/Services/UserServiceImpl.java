@@ -2,23 +2,30 @@ package com.org.userinfo.Services;
 
 
 import com.org.userinfo.Configurations.PasswordUtil;
+import com.org.userinfo.Configurations.SecurityUtils;
 import com.org.userinfo.DTO.ForgetPasswordDTO;
 import com.org.userinfo.Models.User;
 import com.org.userinfo.Repositories.UserRepository;
+import org.apache.catalina.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
 
+    private final UserRepository userRepository;
+
     @Autowired
-    UserRepository userRepository;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -56,49 +63,40 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public User getUserById(Long id) {
-
-        User user= null;
-        try{
-            user = userRepository.getUserById(id);
-            if(user == null){
-                return null;
-            }
-        }catch (Exception ex){
-            System.out.println(ex.getCause().getMessage());
-        }
-        return user;
-    }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public User changePassword(Long id , ForgetPasswordDTO forgetPasswordDTO){
-        try{
-            User user = userRepository.getUserById(id);
-
-            if (user != null){
-                user.setPassword(PasswordUtil.passwordHash(forgetPasswordDTO.getNewPassword()));
-                return userRepository.save(user);
-            }
-        }catch (Exception ex){
-            System.out.println(ex.getCause().getMessage());
-        }
+    public User getUserByUserName(String username) {
         return null;
     }
 
     @Override
-    public User getUserByUserName(String username) {
-        User user;
-        try{
-            user = userRepository.findByUsernameIgnoreCase(username);
-            if(user == null){
-                return null;
-            }
-        }catch (Exception ex){
-            throw new UsernameNotFoundException("No user found with user name "+ username+" .");
+    @Transactional
+    public Boolean changePassword(ForgetPasswordDTO forgetPasswordDTO) {
+
+        boolean status = false;
+
+        String passwordByLogin = userRepository.findPasswordWithOptionalUsernameString(SecurityUtils.getCurrentUserLogin());
+        System.out.println(passwordByLogin);
+
+        if(PasswordUtil.checkPassword(forgetPasswordDTO.getOldPassword(),passwordByLogin)){
+
+            changePasswordConfirm(forgetPasswordDTO.getNewPassword());
+            status = true;
         }
-        return user;
+        return status;
+    }
+
+    @Override
+    public void changePasswordConfirm(String password) {
+        try{
+            Optional<String> username = SecurityUtils.getCurrentUserLogin();
+            User user = userRepository.findOneByUsername(username);
+            userRepository.save(user);
+
+        }catch (Exception ex){
+            ex.getCause().getMessage();
+        }
+
+
     }
 }

@@ -31,7 +31,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception{
 
-        System.out.println("configure authentication called");
+
         authenticationManagerBuilder.userDetailsService(this.jwtUserDetailsService).passwordEncoder(PasswordEncoder());
     }
 

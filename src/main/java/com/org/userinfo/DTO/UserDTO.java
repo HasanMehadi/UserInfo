@@ -1,10 +1,12 @@
 package com.org.userinfo.DTO;
 
 
+import com.org.userinfo.Configurations.Response;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-public class UserDTO {
+public class UserDTO extends Response {
 
     private Long id;
 
@@ -39,6 +41,7 @@ public class UserDTO {
                    LocalDate dob, String role,
                    boolean enable, String token
     ) {
+        super();
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -56,6 +59,8 @@ public class UserDTO {
     public UserDTO() {
 
     }
+
+
 
     public Long getId() {
         return id;

@@ -1,12 +1,12 @@
 package com.org.userinfo.Configurations;
 
-import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class PasswordUtil {
 
-    static PasswordEncoder encoder;
+    static BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(15);
 
     public static String passwordHash(String password){
 

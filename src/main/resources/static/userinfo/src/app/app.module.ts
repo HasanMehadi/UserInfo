@@ -10,7 +10,7 @@ import {SignupModule} from "./signup/signup/signup.module";
 import {LoginModule} from "./login/login/login.module";
 import {Router, RouterModule} from "@angular/router";
 import {DashBoardModule} from "./dash-board/dash-board/dash-board.module";
-
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 
 
@@ -30,7 +30,7 @@ import {DashBoardModule} from "./dash-board/dash-board/dash-board.module";
     FormsModule,
     HttpClientModule,
     NgxPaginationModule,
-
+    Ng2SearchPipeModule
 
   ],
   providers: [],

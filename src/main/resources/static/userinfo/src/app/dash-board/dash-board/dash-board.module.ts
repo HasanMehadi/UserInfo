@@ -4,7 +4,7 @@ import {FormsModule} from "@angular/forms";
 import {BrowserModule} from "@angular/platform-browser";
 import {NgxPaginationModule} from "ngx-pagination";
 import {RouterModule} from "@angular/router";
-
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import {DashBoardService} from "../dash-board.service";
 import {DashBoardComponent} from "../dash-board.component";
 import {AuthGuard} from "../../auth.guard";
@@ -21,6 +21,7 @@ import {UserPanelComponent} from "../../user-panel/user-panel.component";
     BrowserModule,
     NgxPaginationModule,
     RouterModule,
+    Ng2SearchPipeModule
 
   ],
   providers:[AuthGuard,DashBoardService,UserPanelService]

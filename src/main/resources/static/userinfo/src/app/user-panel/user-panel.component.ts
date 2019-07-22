@@ -14,13 +14,12 @@ export class UserPanelComponent implements OnInit {
 
 
   forgetPassword: any;
-
   rematch:any;
-
   notMatched:boolean;
   pass:any;
   conPass:any;
   matched:any;
+  status: any;
 
   loginUser :any={};
 
@@ -38,11 +37,17 @@ export class UserPanelComponent implements OnInit {
   }
 
   changePassword(){
-    this.forgetPassword.username = this.loginUser.username;
-    this.forgetPassword.token = this.loginUser.token;
     this.userPanelService.changePasswordToNew(this.loginUser.token, this.forgetPassword).subscribe((respone)=>{
       console.log(respone);
-    });
+      this.status= respone;
+      console.log(this.status.message);
+      if(this.status.message== "true"){
+        localStorage.removeItem("currentUser");
+        this.router.navigate([''])
+      }
+    },error =>{
+      alert("Old Password is wrong");
+    } );
   }
 
   @HostListener('submit', ['$event'])
