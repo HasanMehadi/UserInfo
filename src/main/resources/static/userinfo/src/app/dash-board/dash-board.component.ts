@@ -3,6 +3,7 @@ import {DashBoardService} from "./dash-board.service";
 import {LoginAuthService} from "../login/login-auth.service";
 import {Router} from "@angular/router";
 import {LocationStrategy} from "@angular/common";
+import {ConstantService} from "../constant.service";
 
 
 
@@ -27,6 +28,7 @@ export class DashBoardComponent implements OnInit {
   constructor(private dashBoardService: DashBoardService,
               private loginAuthService: LoginAuthService,
               private router: Router,
+              private constantService: ConstantService,
               location: LocationStrategy
   ) {
 
@@ -47,6 +49,7 @@ export class DashBoardComponent implements OnInit {
     this.pass = false;
     this.username = this.loginUser.username;
     this.role = this.loginUser.role;
+    this.constantService.isAuthenticated();
   }
 
   logOut() {
